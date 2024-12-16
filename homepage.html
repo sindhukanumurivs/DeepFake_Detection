@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <title>Deepfake Detection</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            #background-color: #121212;
+            color: #fff;
+            overflow-x: hidden;
+        }
+	.main {
+    width: 100%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.5) 50%), url(back.jpeg);
+    background-position: center;
+    background-size: cover;
+    height: 100vh;
+    color: #fff;
+}
+
+        /* Navbar */
+         .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 1.2rem 5rem;
+            position: fixed;
+            top: 0;
+            width: 90%;
+            z-index: 1000;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: #fff;
+            margin: 0 1rem;
+            font-size: 1.2rem;
+        }
+
+        .navbar a:hover {
+            color: #00bcd4;
+        }
+
+        /* Hero Section */
+              .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(2, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), 
+              url('back.jpeg') no-repeat center/cover;
+             	    display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #fff;
+            position: relative;
+        }
+
+        .hero::before {
+            content: "";
+            
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1;
+        }
+ .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+.hero h2 {
+            font-size: 1.7rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 2;
+            max-width: 700px;
+        }
+
+        .hero button {
+            padding: 0.8rem 2rem;
+            background-color: #00bcd4;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            position: relative;
+            z-index: 2;
+        }
+ .hero button:hover {
+            background-color: #0097a7;
+        }
+
+        /* Features Section */
+        /* Info Section */
+.info-section {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    gap: 2rem;
+    padding: 4rem 2rem;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+.info-card {
+    text-align: center;
+    max-width: 300px;
+}
+
+.info-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease-in-out;
+}
+
+.info-card img:hover {
+    transform: scale(1.05);
+}
+
+.info-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #000;
+}
+
+.info-card p {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #555;
+}
+
+
+        /* Upload Section */
+        .upload {
+            padding: 4rem 2rem;
+            text-align: center;
+            background-color: #121212;
+        }
+.detecting-text {
+font-family: 'Playfair Display', serif;
+  font-size: 23px;
+  line-height: 1.6;
+  padding: 20px;
+  background-color: #121212;  /* Black background */
+  color: #ffffff;  /* White text */
+  border: 5px solid transparent;  /* Increased border width */
+  display: inline-block;  /* Make the text wrap around the content */
+  position: relative;  /* Needed for positioning the "REAL - 100%" text */
+  animation: borderDetect 3s infinite;  /* Animation applied to border */
+  border-radius: 5px;  /* Optional: Rounded corners */
+}
+
+.real-tag {
+  font-family: 'Roboto', sans-serif;
+  position: absolute;
+  right: 10px;  /* Position the text on the right edge of the border */
+  top: -40px;  /* Position the text near the bottom of the border */
+  font-weight: bold;
+  color: transparent;  /* Initially transparent text */
+  font-size: 20px;  /* Slightly smaller font size */
+  animation: textDetect 3s infinite;  /* Animation applied to the text */
+}
+
+@keyframes borderDetect {
+  0% {
+    border-color: transparent;
+  }
+  50% {
+    border-color: #4CAF50;  /* Green border during detection */
+  }
+  100% {
+    border-color: transparent;
+  }
+}
+@keyframes textDetect {
+  0% {
+    color: transparent;
+  }
+  50% {
+    color: #4CAF50;  /* Green color for the "REAL" text during detection */
+  }
+  100% {
+    color: transparent;
+  }
+}
+     
+        /*slideshow */
+                
+    .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      height: 90vh;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+
+ .left-side {
+margin-bottom:17%;
+      width: 50%;
+      color: black;
+      opacity: 0;  /* Start hidden */
+      transform: translateX(-30px);  /* Start off to the left */
+      animation: fadeIn 1s forwards;  /* Animation for fade-in */
+      animation-delay: 0.5s;
+          }
+
+    .left-side h2 {
+      font-family: 'Playfair Display', serif; /* Aesthetic font for headings */
+      font-size: 2.8em;
+      margin-bottom: 20px;
+      font-weight: bold;
+      color: black;    }
+
+.left-side p {
+      font-size: 1.2em;
+      line-height: 1.8;
+      margin-bottom: 20px;
+color: #121212;
+    }
+
+    .right-side {
+      width: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    
+.slideshow-container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  border-radius: 5px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  border: 1px solid black; /* Add a black border */
+}
+
+
+    .slides {
+      display: flex;
+      transition: transform 0.5s ease;
+    }
+
+    .slide {
+      min-width: 100%;
+      height: 100%;
+      background-color: #fff;
+      border-radius: 15px;
+      position: relative;
+    }
+
+    .slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 15px;
+    }
+
+    .slide-text {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      line-height: 1.2;
+      text-align: center;
+      color: #fff;
+      font-size: 1.2em;
+      font-weight: bold;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+      background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+      box-sizing: border-box;
+      padding: 10px;
+    }
+
+    .navigation-btns {
+      position: absolute;
+      top: 50%;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      transform: translateY(-50%);
+    }
+
+    .prev, .next {
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+      padding: 10px;
+      border: none;
+      cursor: pointer;
+      border-radius: 50%;
+      font-size: 20px;
+    }
+
+    .prev:hover, .next:hover {
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+
+      .left-side, .right-side {
+        width: 100%;
+        margin-bottom: 20px;
+      }
+
+      .slideshow-container {
+        height: 60%;
+      }
+    }
+@keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateX(0);  /* Move to normal position */
+      }
+    }  
+      /* Footer */
+        footer {
+            padding: 2rem;
+            text-align: center;
+            background-color: #121212;
+            color: #aaa;
+        }
+
+        footer a {
+            color: #00bcd4;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="main">
+
+    <div class="navbar">
+        <a href="#">Deepfake Detection</a>
+        <div>
+            <a href="#hero">Home</a>
+            <a href="#info-card">Features</a>
+            <a href="#upload">About</a>
+            <a href="#container">Guide</a>
+        </div>
+    </div>
+<
+    <div id="hero" class="hero">
+        <h1>The Deepfake Reality Check</h1>
+        <h2>Unveiling Reality, Detecting Deepfakes</h2>
+<br>
+<br>
+<a href="loginpage.html">
+        <button onclick="scrollToSection('features')">Get Started</button>
+</a>
+    </div>
+
+
+    <section class="info-section">
+        <div id="info-card" class="info-card">
+            <img src="C:\Users\sindh\OneDrive\Desktop\Documents\major project\major project\image_darker.png" alt="Video Detection">
+            <h3>Video Detection</h3>
+            <p>Analyze videos for authenticity with advanced AI tools.</p>
+        </div>
+
+        <div class="info-card">
+            <img src="C:\Users\sindh\OneDrive\Desktop\Documents\major project\major project\photodetect.webp" alt="Image Detection">
+            <h3>Image Detection</h3>
+            <p>Verify the authenticity of images in seconds.</p>
+        </div>
+
+        <div class="info-card">
+            <img src="C:\Users\sindh\OneDrive\Desktop\Documents\major project\major project\analysis.jpg" alt="Reports">
+            <h3>Detailed Reports</h3>
+            <p>Receive comprehensive analysis and insights.</p>
+        </div>
+    </section>
+
+    <div id="upload" class="upload">
+        <p class="detecting-text">
+  In today’s digital age, distinguishing between real and fake content can be a daunting task. Our Deepfake Detection tool is here to empower you with the ability to uncover the truth behind videos and images. With cutting-edge technology and AI-driven analysis, our application offers a seamless, reliable way to verify the authenticity of digital media, giving you confidence in what you see. Whether you're a content creator, journalist, or just someone who values truth, our tool ensures that you stay informed and protected from the dangers of digital deception. Join us in the fight for a more transparent and truthful digital world!
+<span class="real-tag">REAL - 100%</span>
+</p>
+
+    </div>
+
+    <div id="container" class="container">
+    <!-- Left Side: Text Section -->
+    <div class="left-side">
+      <h2>Explore How It Works</h2>
+      <p>
+        Discover the powerful features of our deepfake detection tool.
+<br> 
+        Learn how to analyze videos and images to determine authenticity with advanced AI models.
+      </p>
+    </div>
+
+    <!-- Right Side: Slideshow Section -->
+    <div class="right-side">
+      <div class="slideshow-container">
+        <div class="slides">
+          <!-- Slide 1 -->
+          <div class="slide">
+            <img src="C:\Users\sindh\OneDrive\Desktop\Documents\major project\major project\slide1.png" alt="Tutorial Step 1">
+            <div class="slide-text">Step 1: Upload your video file</div>
+          </div>
+          <!-- Slide 2 -->
+          <div class="slide">
+            <img src="C:\Users\sindh\OneDrive\Desktop\Documents\major project\major project\slide2.png" alt="Tutorial Step 2">
+            <div class="slide-text"></div>
+          </div>
+          <!-- Slide 3 -->
+          <div class="slide">
+            <img src="C:\Users\sindh\OneDrive\Desktop\Documents\major project\major project\slide3.png" alt="Tutorial Step 3">
+            <div class="slide-text">Step 2: Click on Detect</div>
+          </div>
+
+<div class="slide">
+            <img src="C:\Users\sindh\OneDrive\Desktop\Documents\major project\major project\slide4.png" alt="Tutorial Step 3">
+            <div class="slide-text">Step 3: View the result</div>
+          </div>
+
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="navigation-btns">
+          <button class="prev" onclick="moveSlide(-1)">&#10094;</button>
+          <button class="next" onclick="moveSlide(1)">&#10095;</button>
+        </div>
+      </div>
+    </div>
+  </div>
+    <footer>
+        <p>Built with AI to detect the unseen in a digital world 🌐 | <a href="#">Contact Us</a></p>
+    </footer>
+</div>
+
+    <script>
+    let slideIndex = 0;
+    const slideTexts = [
+      "Step 1: Upload your video file",
+      "Step 2: Click on Detect",
+      "Step 3: View the result"
+    ];
+
+    // Function to move slides
+    function moveSlide(direction) {
+      const slides = document.querySelectorAll(".slide");
+      slideIndex += direction;
+
+      // Loop around slides
+      if (slideIndex < 0) {
+        slideIndex = slides.length - 1;
+      } else if (slideIndex >= slides.length) {
+        slideIndex = 0;
+      }
+
+      // Move to the correct slide
+      const slideWidth = slides[0].offsetWidth;
+      document.querySelector(".slides").style.transform = `translateX(-${slideIndex * slideWidth}px)`;
+
+      // Change the text
+      const textContainer = document.querySelector(".slide-text");
+      textContainer.textContent = slideTexts[slideIndex];
+    }
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function previewFile() {
+    const file = document.getElementById('file-upload').files[0];
+    const preview = document.getElementById('file-preview');
+    
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    } else {
+        preview.style.display = 'none';
+        preview.src = '';
+    }
+}
+
+function detectDeepfake() {
+    alert('Deepfake detection process started! Please wait...');
+    // Simulate detection logic here. You can call APIs or run your detection logic.
+    setTimeout(() => {
+        alert('Detection completed! Results are now displayed.');
+        // Update results section dynamically if needed
+    }, 3000); // Simulate delay
+}
+
+function scrollToSection(id) {
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
