@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DF-Detect</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;500;600&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #e5e5e5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin-top: 0px;
+        }
+        .container {
+            display: flex;
+            width: 850px;
+            height: 550px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .right-section {
+            background: #EBEFF7;
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px;
+        }
+        .right-section img {
+            width: 280px;
+        }
+        .left-section {
+            width: 50%;
+            align-items: center;
+          
+            padding: 40px;
+        }
+        h1 {
+            font-family: 'Elegant';
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 10px;
+            margin-top: -10px;
+            color:#537cc2;
+        }
+        p {
+            text-align: center;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: 500;
+            display: block;
+            margin: 5px 0 5px;
+            font-size: 14px;
+        }
+        input {
+            width: 94%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .sign-in-btn {
+            width: 50%;
+            padding: 10px;
+            background-color: #444;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 25px;
+            display: block;
+            margin: 10px auto;
+        }
+        .sign-in-btn:hover {
+            background-color: #222;
+        }
+        .separator {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 5px 0;
+        }
+        .separator::before, .separator::after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px solid #ccc;
+        }
+        .separator:not(:empty)::before {
+            margin-right: .5em;
+        }
+        .separator:not(:empty)::after {
+            margin-left: .5em;
+        }
+        .google-signin {
+            text-align: center;
+            margin: 5px 0;
+        }
+        .google-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            background: none;
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            color: #555;
+            cursor: pointer;
+        }
+        .google-btn img {
+            width: 18px;
+            margin-right: 8px;
+        }
+        .create-account {
+            text-align: center;
+        }
+        .forgot-password {
+            text-align: right;
+            display: block;
+            margin: 5px 0;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <div class="left-section">
+            <h1>Df Detect-Signup</Detect-Signup></h1>
+            
+            
+            <form method="post" action="{% url 'signup' %}">
+                {% csrf_token %}
+                <label for="email">Email</label>
+                <input type="email" name="email" id="email" placeholder="Enter your email" required>
+
+                <label for="username">Username or Email</label>
+                <input type="text" name="username" id="username" placeholder="Enter your username" required>
+                
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password" placeholder="Enter your password" required>
+                
+                <label for="password">Password</label>
+                <input type="password" name="confirm_password" id="Confirm password" placeholder="Confirm your password" required>
+               
+                <button type="submit" class="sign-in-btn">Sign up</button>
+            </form>
+            
+            <div class="separator">or</div>
+            <div class="google-signin">
+                <button class="google-btn">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9Kc_uM3BnyM0SXhQBvQ_mmBQGHoELfr68ap9NN4nbhFi541XbDy0Mkt4blbPhNcL9QMY&usqp=CAU" width="20" 
+     height="20" alt="Google Logo">
+     <a href="{% url 'account_login' %}">Sign up with Google</a>
+                </button>
+            </div>
+            <div class="create-account">
+                <p>Already registered? <a href="{% url 'login' %}">Login to your account</a></p>
+            </div>
+        </div>
+        <div class="right-section">
+            <img src="data:image/jpeg;base64,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" alt="Lovebirds Illustration">
+            <p>The DeepFake Reality Check</p>
+            <p>Login with your credentials to unviel the reality and detect the deepfakes</p>
+        </div>
+    </div>
+    
+        {% if error %}
+<script>
+    window.onload = function() {
+        alert("{{ error|escapejs }}");
+    };
+</script>
+{% endif %}
+
+    
+
+</body>
+</html>

@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deepfake Detection</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+
+        }
+
+        
+         
+        /* Main Container */
+        .container {
+            width: 100%;
+	    height:100%;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+position:relative;
+
+        }
+  .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 55%;
+            height: 90%;
+            background: #e8ebf1; /* Light grayish color */
+            clip-path: polygon(100% 0, 0% 100%, 100% 100%);
+            z-index: 0; /* Places it inside the container */
+        }
+ 
+        /* Title Section Inside Container */
+        .title-container {
+            margin-bottom: 70px;
+        }
+.title-container p{
+            margin-bottom: 70px;
+font-size:15px;
+        }
+
+        /* Flexbox for Sections */
+        .content {
+            display: flex;
+            justify-content: space-between;
+z-index:2;
+
+        }
+
+        .left-section, .right-section {
+            width: 48%;
+z-index:2;
+        }
+
+        /* Upload Box */
+        .upload-box {
+ margin-left: 70px;
+            width: 90%;
+            height: 250px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: #777;
+            cursor: pointer;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            border: 1px solid #ddd;
+        }
+        #frames-container {
+            max-height: 240px;  /* Adjust based on your design */
+            overflow-y: auto;
+        }
+        
+        .upload-box i {
+            font-size: 10px;
+            margin-bottom: 5px;
+            color: #777;
+        }
+        .upload-box i1 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #777;
+        }
+
+        /* Section Headers */
+        .section-header {
+            position: absolute;
+            top: 5px;
+            left: 10px;
+            font-size: 12px;
+            color: #555;
+            background: white;
+            padding: 2px 5px;
+            border-radius: 3px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Buttons */
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        button {
+            width: 38%;
+            padding: 15px;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .clear-btn {
+            background: linear-gradient(to right, #e0e0e0, #f8f8f8);
+            color: #333;
+margin-left:70px;
+width:45%;
+
+		
+        }
+
+        .submit-btn {
+            background: linear-gradient(to right, #ff9966, #ff5e62);
+width:45%;
+margin-left:5px;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+        /* Output Box */
+        .output-box {
+            width: 90%;
+            height: 250px;
+	    margin-right:30px;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: #777;
+            margin-top: 0px;
+            position: relative;
+            border: 1px solid #ddd;
+        }
+
+        /* Confidence Section */
+        .confidence-section {
+            width: 87%;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 20px;
+            text-align: left;
+display: flex;
+            align-items: center;
+            justify-content: center;
+
+z-index:2;
+        }
+
+        .confidence-header {
+            font-size: 14px;
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 5px;
+z-index:2;
+display: flex;
+            align-items: center;
+            justify-content: center;
+
+        }
+
+        .confidence-box {
+            width: 100%;
+            height: 40px;
+            background: #f8f8f8;
+            border-radius: 5px;
+            border: none;
+            text-align: center;
+            font-size: 16px;
+z-index:2;
+display: flex;
+            align-items: center;
+            justify-content: center;
+
+        }
+        .confidence-box1 {
+            width: 100%;
+            height: 40px;
+            background: #f8f8f8;
+            border-radius: 5px;
+            border: none;
+            text-align: center;
+            font-size: 16px;
+z-index:2;
+display: flex;
+            align-items: center;
+            justify-content: center;
+
+        }
+        #prediction-box {
+
+            font-weight: bold;
+            padding: 10px;
+            margin-bottom: 5px;
+            text-align: center;
+            border-radius: 5px;
+            width:70%;
+          }
+        #prediction{
+
+            font-weight: bold;
+            padding: 10px;
+            margin-bottom: 5px;
+            margin-left: 185px;
+            text-align: center;
+            border-radius: 5px;
+            width:70%;
+          }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Title and Description -->
+        <div class="title-container">
+            <h2>Deepfake Detection</h2>
+            <p>Upload a image to determine if it is REAL or FAKE based on the deepfake detection model.</p>
+        </div>
+        <!-- Sections -->
+        <div class="content">
+            <!-- Left Section (Upload) -->
+            <div class="left-section">
+                <div class="upload-box" id="drop-area">
+                    <div class="section-header"><i class="fas fa-file"></i> Upload Image</div>
+                    <i class="fas fa-upload"></i>
+                    <p id="upload-text">Drop File Here <br> - or - <br> Click to Upload</p>
+                    <form id="video-upload-form" enctype="multipart/form-data" method="POST">
+                        {% csrf_token %}
+                        <input type="file" id="videoInput" name="video_file" accept="image/*" style="display:none;" />
+                        
+                </div>
+                <div class="buttons">
+                    <button class="clear-btn" id="clearBtn">Clear</button>
+                    <button class="submit-btn" type="submit" id="videoUpload">Submit</button>
+                </div>
+            </form>
+            </div>
+            <!-- Right Section (Output) -->
+            <div class="right-section">
+                <div class="output-box" id="output-box">
+                    <div class="section-header"><i class="fas fa-image"></i> Heatmap </div>
+                    <div id="image-container">
+                        <!-- Image will be inserted here -->
+                    </div>
+                    
+                </div>
+                <div class="confidence-section">
+                    <div id="prediction-box">
+                    <div class="confidence-header">Result</div>
+                    <textarea class="confidence-box" id="confidence-box" readonly></textarea>
+                </div>
+                </div>
+                <div class="confidence-section">
+                    <div id="prediction"></div>
+                    <div class="confidence-header"></div>
+                    <textarea class="confidence-box1" id="confidence-box1" readonly></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Get references to DOM elements
+            const dropArea = document.getElementById("drop-area");
+            const videoInput = document.getElementById("videoInput");
+            const uploadText = document.getElementById("upload-text");
+            const clearBtn = document.getElementById("clearBtn");
+            const videoUploadForm = document.getElementById("video-upload-form");
+            const imageContainer = document.getElementById("image-container");
+            const predictionBox = document.getElementById("prediction-box");
+            const confidenceBox = document.getElementById("confidence-box");
+            const confidenceBox1 = document.getElementById("confidence-box1");
+        
+            // Trigger file input when drop area is clicked (unless clicking on submit button)
+            dropArea.addEventListener("click", function (e) {
+                if (e.target !== videoInput && e.target.id !== "videoUpload") {
+                    videoInput.click();
+                }
+            });
+        
+            // Update upload text when a file is selected
+            videoInput.addEventListener("change", function (e) {
+                const file = e.target.files[0];
+                if (file) {
+                    
+                    
+                uploadText.innerHTML = `
+                    <p>Image Selected:Please wait until it is processed</p>
+                    
+                `;
+                }else {
+                    uploadText.innerHTML = "Drop File Here <br> - or - <br> Click to Upload";
+                }
+         });
+        
+            // Clear the selected file and output displays
+            clearBtn.addEventListener("click", function (e) {
+                location.reload();
+            });
+        
+            // Handle form submission via AJAX
+            videoUploadForm.addEventListener("submit", function (e) {
+                e.preventDefault();
+        
+                // Disable submit button and update text
+                const submitButton = document.getElementById("videoUpload");
+                submitButton.disabled = true;
+                submitButton.innerHTML = "Uploading...";
+        
+                // Create form data and append the selected file
+                const formData = new FormData();
+                const file = videoInput.files[0];
+                if (!file) {
+                    alert("Please select a file.");
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = "Submit";
+                    return;
+                }
+                formData.append("video_file", file);
+        
+                // Append CSRF token if using Django (template tag ensures it renders)
+                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                formData.append("csrfmiddlewaretoken", csrfToken);
+        
+                // Make the fetch POST call to your Django view (adjust URL if necessary)
+                fetch("{% url 'imagedetect' %}", {
+                    method: "POST",
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "success") {
+                        // Clear previous image and insert the new image from base64 data
+                        imageContainer.innerHTML = "";
+                        const imgElement = document.createElement("img");
+                        imgElement.src = `data:image/png;base64,${data.image_data}`;
+                        imgElement.alt = "Grad-CAM Heatmap";
+                        imgElement.style.maxWidth = "500px";
+                        imageContainer.appendChild(imgElement);
+        
+                        // Update prediction and confidence
+                       
+                        const predictionBox = document.getElementById('prediction-box');
+                    const prediction1 = document.getElementById('prediction');
+        predictionBox.textContent = data.label; 
+        prediction1.textContent = "Confidence:"+ data.confidence; // e.g. "REAL" or "FAKE"
+        prediction1.style.border='2px solid black';
+        prediction1.style.color = 'black';
+
+        prediction1.style.marginLeft=50 ;
+       
+        // 2) Style it based on the label
+        if (data.label === 'Authentic') {
+          predictionBox.style.border = '2px solid green';
+          predictionBox.style.color = 'green';
+        } else {
+          predictionBox.style.border = '2px solid red';
+          predictionBox.style.color = 'red';
+        }
+                    } else {
+                        alert("Error: " + JSON.stringify(data.errors));
+                    }
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = "Submit";
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("An error occurred during file upload.");
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = "Submit";
+                });
+            });
+        });
+        </script>
+        
+</body>
+</html>

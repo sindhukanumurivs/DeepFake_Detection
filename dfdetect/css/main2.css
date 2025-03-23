@@ -1,0 +1,130 @@
+.container1 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 90vh;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+
+.left-side {
+margin-bottom:17%;
+    width: 50%;
+    color: black;
+    opacity: 0;  /* Start hidden */
+    transform: translateX(-30px);  /* Start off to the left */
+    animation: fadeIn 1s forwards;  /* Animation for fade-in */
+    animation-delay: 0.5s;
+        }
+
+  .left-side h2 {
+    font-family: 'Playfair Display', serif; /* Aesthetic font for headings */
+    font-size: 2.8em;
+    margin-bottom: 20px;
+    font-weight: bold;
+    color: black;    }
+
+.left-side p {
+    font-size: 1.2em;
+    line-height: 1.8;
+    margin-bottom: 20px;
+color: #121212;
+  }
+
+  
+  
+.slideshow-container {
+width: 100%;
+height: 100%;
+overflow: hidden;
+position: relative;
+border-radius: 5px;
+box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+border: 1px solid black; /* Add a black border */
+}
+
+
+  .slides {
+    display: flex;
+    transition: transform 0.5s ease;
+  }
+
+ 
+
+  .slide-text {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    line-height: 1.2;
+    text-align: center;
+    color: #fff;
+    font-size: 1.2em;
+    font-weight: bold;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    box-sizing: border-box;
+    padding: 10px;
+  }
+
+  .navigation-btns {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+  }
+
+  .prev, .next {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+    font-size: 20px;
+  }
+
+  .prev:hover, .next:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+
+  @media (max-width: 768px) {
+    .container1 {
+      flex-direction: column;
+    }
+
+    .left-side, .right-side {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+
+    .slideshow-container {
+      height: 60%;
+    }
+  }
+@keyframes fadeIn {
+    to {
+      opacity: 1;
+      transform: translateX(0);  /* Move to normal position */
+    }
+  }  
+    /* Footer */
+      footer {
+          padding: 2rem;
+          text-align: center;
+          background-color: #121212;
+          color: #aaa;
+      }
+
+      footer a {
+          color: #00bcd4;
+          text-decoration: none;
+      }
+
+      footer a:hover {
+          text-decoration: underline;
+      }

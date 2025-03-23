@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deepfake Detection</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .title-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .title-container p {
+            font-size: 16px;
+            margin-top: 5px;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 1000px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .upload-section, .metadata-section {
+            width: 50%;
+            padding: 20px;
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .upload-box {
+            width: 100%;
+            height: 200px;
+            border: 2px dashed #bbb;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            cursor: pointer;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #666;
+            transition: background 0.3s;
+        }
+
+        .upload-box:hover {
+            background: #e0e0e0;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .clear-btn {
+            background: #ccc;
+        }
+
+        .submit-btn {
+            background: #ff5733;
+        }
+
+        .download-btn {
+            background: #007bff;
+            display: none;
+            margin-top: 15px;
+        }
+
+        .metadata-card {
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            text-align: left;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            max-width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .upload-section, .metadata-section {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="title-container">
+        <h2>Deepfake Detection</h2>
+        <p>Upload an image or folder to ectract the metadata of the images.</p>
+    </div>
+
+    <div class="container">
+        <div class="upload-section">
+            <h2>Upload Image(s)</h2>
+            <p>Click to upload single/multiple images</p>
+            <div class="upload-box" id="drop-area">
+                <i class="fas fa-upload fa-2x"></i>
+                <p id="upload-text">Click to Upload</p>
+                <form id="image-upload-form" enctype="multipart/form-data" method="POST">
+                    {% csrf_token %}
+                    <input type="file" id="imageInput" name="images" accept="image/*" multiple style="display:none;">
+                </form>
+            </div>
+            <div class="buttons">
+                <button class="clear-btn" id="clearBtn">Clear</button>
+                <button class="submit-btn" id="imageUpload">Submit</button>
+            </div>
+        </div>
+
+        <div class="metadata-section">
+            <h2>Extracted Metadata</h2>
+            <div id="metadataContainer"></div>
+            <button class="download-btn" id="downloadMetadata">
+                <i class="fas fa-download"></i> Download Metadata
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const dropArea = document.getElementById("drop-area");
+        const imageInput = document.getElementById("imageInput");
+        const uploadText = document.getElementById("upload-text");
+        const clearBtn = document.getElementById("clearBtn");
+        const metadataContainer = document.getElementById("metadataContainer");
+        const downloadButton = document.getElementById("downloadMetadata");
+        const submitButton = document.getElementById("imageUpload");
+
+        let metadataJson = [];
+
+        dropArea.addEventListener("click", () => {
+            imageInput.click();
+        });
+
+        imageInput.addEventListener("change", (event) => {
+            const files = event.target.files;
+            if (files.length > 0) {
+                uploadText.innerHTML = `Selected ${files.length} image(s)`;
+            }
+        });
+
+        clearBtn.addEventListener("click", () => {
+            imageInput.value = "";
+            uploadText.innerHTML = "Click to Upload";
+            metadataContainer.innerHTML = "";
+            metadataJson = [];
+            downloadButton.style.display = "none";
+        });
+
+        submitButton.addEventListener("click", function(e) {
+            e.preventDefault();
+
+            if (!imageInput.files.length) {
+                alert("Please select at least one image.");
+                return;
+            }
+
+            const formData = new FormData();
+            Array.from(imageInput.files).forEach(file => {
+                formData.append("images", file);
+            });
+
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            formData.append("csrfmiddlewaretoken", csrfToken);
+
+            fetch("{% url 'metadataimage' %}", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    metadataJson = data.metadata;
+                    metadataContainer.innerHTML = metadataJson.map(metadata => `
+                        <div class="metadata-card">
+                            <h3>${metadata.Filename}</h3>
+                            <p><strong>Dimensions:</strong> ${metadata.Size}</p>
+                            <p><strong>Format:</strong> ${metadata.Format}</p>
+                            <p><strong>Color Mode:</strong> ${metadata["Color Mode"]}</p>
+                            <p><strong>MIME Type:</strong> ${metadata["MIME Type"]}</p>
+                            <p><strong>Info:</strong> ${metadata.Info}</p>
+                        </div>
+                    `).join("");
+                    downloadButton.style.display = "block";
+                } else {
+                    alert(data.message || "Error retrieving metadata.");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("An error occurred.");
+            });
+        });
+
+        downloadButton.addEventListener("click", function() {
+            const blob = new Blob([JSON.stringify(metadataJson, null, 2)], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "metadata.json";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+    </script>
+
+</body>
+</html>
