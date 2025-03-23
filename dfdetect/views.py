@@ -162,23 +162,8 @@ class DeepfakeModel(nn.Module):
 # -------------------------------------------
 # Load the saved model checkpoint
 # -------------------------------------------
-MODEL_CHECKPOINT_PATH = r"C:\Users\sindh\OneDrive\Desktop\Documents\major project\major project\Frontend\newfrontend\myproject\myapp\models\model_97_acc_100_frames_FF_data.pt"
-device = torch.device('cpu')  # or torch.device('cuda') if using GPU
 
-model = DeepfakeModel(num_classes=2)
-state_dict = torch.load(MODEL_CHECKPOINT_PATH, map_location=device)
-model.load_state_dict(state_dict, strict=False)
-model.eval()  # Set the model to evaluation mode
 
-# -------------------------------------------
-# Setup transformations and face detector
-# -------------------------------------------
-transform = transforms.Compose([
-    transforms.ToPILImage(),
-    transforms.Resize((224, 224)),  # Adjust if needed
-    transforms.ToTensor()
-])
-mtcnn = MTCNN(keep_all=True)
 
 # -------------------------------------------
 # Helper Functions
