@@ -619,33 +619,6 @@ def overlay_heatmap(image_path, alpha=0.4, target_size=(256, 256)):
     # Load image and resize to model's expected input size
     img = load_img(image_path, target_size=target_size)
     img = img_to_array(img)
-    filename = image_path.lower()  # Convert to lowercase for case insensitivity
-    import random
-    import re
-
-    
-
-    # Extract numbers from filename
-    numbers = re.findall(r'\d+', filename)  
-    if numbers:
-        last_number = int(numbers[-1])  # Take the last number found
-        if last_number % 2 == 1:  # If the number is odd
-            pred_class = 0  # Fake
-        else:
-            pred_class = 1
-    elif "fake" or "f" in filename:
-        pred_class = 0  # Fake
-          
-    elif "real" or "r" in filename:
-        pred_class = 1  # Real
-    else:
-        pred_class=0  
-    if pred_class==0:
-        pred_prob = round(random.uniform(10, 50), 2) / 100
-    else:
-        pred_prob = round(random.uniform(70, 89), 2) / 100
-    formatted_prob = f"{pred_prob*100:.2f}"
-    """else:
     # Get model prediction
         img_input = np.expand_dims(img / 255.0, axis=0)  # Normalize and add batch dim
         prediction = model.predict(img_input)
@@ -653,7 +626,7 @@ def overlay_heatmap(image_path, alpha=0.4, target_size=(256, 256)):
         # Ensure prediction is extracted properly for binary classification
         pred_class = 1 if prediction[0] == 1  else 0
         pred_prob = float(prediction[0]) if pred_class == 1 else 1 - float(prediction[0])
-        print(prediction)"""
+        print(prediction)
     label = 'Authentic' if pred_class == 1 else 'Forged'
     print(f"Prediction: {label} with {pred_prob * 100:.2f}% confidence")
     return label,formatted_prob
@@ -719,7 +692,7 @@ def encode_image_to_base64(img):
     return base64.b64encode(buffer).decode("utf-8")
 
 
-def overlayheatmap(image_path, alpha=0.4, target_size=(256, 256)):
+def overlayheatmap(image_path, heatmap,alpha=0.4, target_size=(256, 256)):
     # Load image and resize to model's expected input size
     img = load_img(image_path, target_size=target_size)
     img = img_to_array(img)
@@ -757,9 +730,9 @@ def imagedetect(request):
                 preprocessed_image = tf.expand_dims(preprocessed_image, axis=0) 
             class_idx = 1
 
-            #model = load_model("/content/sample_data/140k_best_model.keras", compile=False)
-            #heatmap = grad_cam(model, preprocessed_image, class_idx, target_layer_name)
-            label,confidence=overlay_heatmap( image_path)
+            model = load_model("/content/sample_data/140k_best_model.keras", compile=False)
+            heatmap = grad_cam(model, preprocessed_image, class_idx, target_layer_name)
+            label,confidence=overlay_heatmap( image_path,heatmap)
 
             reprocessed_image = preprocess_img(image_path)
             heatmap2 = grad_cam2(model2, reprocessed_image)
